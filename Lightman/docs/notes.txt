@@ -1,0 +1,21 @@
+https://medium.com/bgl-tech/how-to-make-your-first-get-api-call-in-c-net-core-501134ee6e19
+
+curl -s "https://opensky-network.org/api/flights/all?begin=1517227200&end=1517230800" -o "c:\temp\opensky.json"
+
+curl -s "https://opensky-network.org/api/flights/arrival?begin=1654056000&end=1654488000&airport=KMGY" -o "arrivals.wrightbros.json"
+curl -s "https://opensky-network.org/api/flights/arrival?begin=1654056000&end=1654488000&airport=KFFO" -o "arrivals.wrightpatt.json"
+curl -s "https://opensky-network.org/api/flights/arrival?begin=1654056000&end=1654488000&airport=KDAY" -o "arrivals.daycox.json"
+
+
+
+KMGY Wright Bros
+KFFO  Wright patt
+KDAY Dayton INt'l
+
+/flights/arrival
+/flights/departure
+
+jun 1 2022   1654056000
+jun 6 2022   1654488000
+
+
