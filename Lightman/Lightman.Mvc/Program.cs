@@ -1,3 +1,7 @@
+using Lightman.Mvc;
+using Lightman.Mvc.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +11,11 @@ builder.Services.AddHttpClient("OpenSky", client =>
     client.BaseAddress = new Uri("https://opensky-network.org/api/");
 });
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+  options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext")));
+
+builder.Services.AddScoped<IAirportService, AirportService>();
+builder.Services.AddScoped<IFlightsService, FlightsService>();
 
 var app = builder.Build();
 

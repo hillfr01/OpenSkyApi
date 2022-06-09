@@ -1,6 +1,10 @@
-﻿namespace Lightman.Mvc.Services
+﻿using Lightman.Mvc.Models;
+using Lightman.Mvc.Models.Datatables;
+using System.Text.Json;
+
+namespace Lightman.Mvc.Services
 {
-    public class FlightsService
+    public class FlightsService : IFlightsService
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUri;
@@ -9,11 +13,22 @@
             _httpClient = httpClient;
             _baseUri = "https://opensky-network.org/api/flights/";
         }
-        //public Models.Arrivals GetFlightsByTime(DateTime beginDateTime, DateTime endDateTime, string airport)
-        //{
 
-        //    var uri = $"{_baseUri}arrival?begin={beginUnixEpochSeconds}&end={endUnixEpochSeconds}&airport={airport}"
-        //    var responseString = await _httpClient.GetStringAsync(uri);
-        //}
+        public ResultListWrapper<Flight> GetArrivals(DateTime beginDateTime, DateTime endDateTime, string airport)
+        {
+            var beginUnixEpochSeconds = Util.DotNetDateTimeToUnixEpochSeconds(beginDateTime);
+            var endUnixEpochSeconds = Util.DotNetDateTimeToUnixEpochSeconds(endDateTime);
+            var uri = $"{_baseUri}arrival?begin={beginUnixEpochSeconds}&end={endUnixEpochSeconds}&airport={airport}";
+            var responseString = _httpClient.GetStringAsync(uri).Result;
+            List<Flight> flights = JsonSerializer.Deserialize<List<Flight>>(responseString);
+            int totalCount = flights.Count();
+            var resultListWrapper = new ResultListWrapper<Flight>(flights, totalCount);
+            return resultListWrapper;
+        }
+
+        public Flight GetDepartures(DateTime beginDateTime, DateTime endDateTime, string airport)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

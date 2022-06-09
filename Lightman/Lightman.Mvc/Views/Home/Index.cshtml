@@ -1,8 +1,148 @@
-﻿@{
+﻿@model SearchForm;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid form-wrapper">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "searchForm" }))
+    {
+        <div class="row">
+            <div class="form-group col-lg-4 col-sm-12" id="UserIdDropDownFormGroup">
+                @Html.LabelFor(m => m.AirportCode, htmlAttributes: new { })
+                @Html.DropDownListFor(m => m.AirportCode, ViewData[Util.Constants.ViewDataKeyForAirportSelect] as IEnumerable<SelectListItem>, new { @id = "AirportDropDown", @class = "form-control" })
+            </div>
+            <div class="form-group col-lg-1 col-sm-2">
+                @Html.LabelFor(m => m.StartDateTime, htmlAttributes: new { @title = "dd-mm-yyyy" })
+                <input type="date" name="StartDateTime" id="StartDateTime" class="form-control" value="@Model.StartDateTime.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="form-group col-lg-1 col-sm-2">
+                @Html.LabelFor(m => m.EndDateTime, htmlAttributes: new { @title = "dd-mm-yyyy" })
+                <input type="date" name="EndDateTime" id="EndDateTime" class="form-control" value="@Model.EndDateTime.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="form-group col-lg-1 col-sm-2">
+                <label>&nbsp;</label>
+                <input type="button" class="form-control" value="Search" id="submitDataTablesSearch" />
+            </div>
+            <div class="form-group col-lg-1 col-sm-2">
+                <label>&nbsp;</label>
+                <input type="button" class="form-control" value="New Search" id="clearBtn" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-2">
+                <input type="hidden" name="Timestamp" id="Timestamp" class="form-control" value="@Model.TimeStamp" />
+            </div>
+        </div>
+    }
 </div>
+
+<div class="row dataTableRow">
+    <table class="table table-striped table-bordered dataTable" style="width:100%">
+        <thead>
+            <tr>
+                @*<th>Arrival Airport</th>*@
+                <th>Call Sign</th>
+                <th>Departure Airport</th>
+                <th>First Seen</th>
+                <th>Last Seen</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        //$('.dataTableRow').hide();
+        var columns =
+            [
+                //{
+                //    "render": function (data, type, full, meta) {
+                //        return '<span>' + full.arrivalAirportDescription + '</span>'
+                //    }, "autoWidth": true
+                //},
+
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<span>' + full.callsign + '</span>'
+                    }, "autoWidth": true
+                },
+
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<span>' + full.departureAirportDescription + '</span>'
+                    }, "autoWidth": true
+                },
+
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<span>' + full.firstSeenDateTime + '</span>'
+                    }, "autoWidth": true
+                },
+
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<span>' + full.lastSeenDateTime + '</span>'
+                    }, "autoWidth": true
+                },
+            ];
+
+        $('#submitDataTablesSearch').click(function () {
+            setDataTable('.dataTable', columns, "Datatable", true);
+        });
+
+        $('#clearBtn').click(function () {
+            location.reload();
+        });
+
+    });
+
+
+    function setDataTable(selector, columns, hasSelectableRows = false) {
+        var table = $(selector)
+            .on('processing.dt', function (e, settings, processing) {
+                $('#processingIndicator').css('display', processing ? 'block' : 'none');
+            })
+            .on('error.dt', function (e, settings, techNote, message) {
+                $('#dataTablesErrorPanel').show();
+                $('#dataTablesErrorPanelMessageText').val(message);
+
+            })
+            .DataTable({
+                dom: 'Bfrtilp',
+                columns: columns,
+                buttons: [
+                    'excel', 'print'
+                ],
+                destroy: true,
+                processing: true, // for show progress bar, see on processing event above for processing dialog
+                //serverSide: false, // for process server side
+                //searchDelay: 1000,
+                filter: true, // this is for disable filter (search box)
+                ordering: true,
+                orderMulti: false, // for disable multiple column at once,
+                ajax: {
+                    type: "POST",
+                    url: "Home/GetArrivals",
+                    contentType: "application/json; charset=utf-8",
+                    data: function (data) {
+                        data.startDateTime = $('#StartDateTime').val()
+                        data.endDateTime = $('#EndDateTime').val()
+                        data.airport = $('#AirportDropDown').val();
+                        return JSON.stringify(data);
+                    }
+                },
+                paging: true,
+                pagingType: 'full_numbers',
+                //lengthMenu: [[5, 10, 50, 100], [5, 10, 50, 100]],
+                //hasSelectableRows: hasSelectableRows
+            })
+            .on('draw.dt', function (e, settings, data) {
+                $('.dataTableRow').show();
+            });
+        return table;
+    }
+</script>

@@ -16,5 +16,10 @@
             DateTime localDatetime = unixStart.AddSeconds(unixEpochSecondsIn).ToLocalTime();
             return localDatetime;
         }
+
+        public static class Constants
+        {
+            public const string ViewDataKeyForAirportSelect = "AirportSelectListItems";
+        }
     }
 }
