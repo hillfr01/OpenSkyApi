@@ -27,10 +27,12 @@ namespace Lightman.Mvc.Controllers
             var airport1 = airportService.LookupAirportDescription("KMGY");
             var airport2 = airportService.LookupAirportDescription("KFFO");
             var airport3 = airportService.LookupAirportDescription("KDAY");
+            var airport4 = airportService.LookupAirportDescription("KORD");
 
             selectListItems.Add(new SelectListItem() { Value = "KMGY", Text = airport1, Selected = true });
             selectListItems.Add(new SelectListItem() { Value = "KFFO", Text = airport2 });
             selectListItems.Add(new SelectListItem() { Value = "KDAY", Text = airport3 });
+            selectListItems.Add(new SelectListItem() { Value = "KORD", Text = airport4 });
             ViewData[Util.Constants.ViewDataKeyForAirportSelect] = selectListItems; //put in view data so html dropdownlistfor helper can access
 
             model.StartDateTime = DateTime.Now.AddDays(-3);
