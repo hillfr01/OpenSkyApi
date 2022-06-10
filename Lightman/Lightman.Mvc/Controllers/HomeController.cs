@@ -28,7 +28,7 @@ namespace Lightman.Mvc.Controllers
             var airport2 = airportService.LookupAirportDescription("KFFO");
             var airport3 = airportService.LookupAirportDescription("KDAY");
 
-            selectListItems.Add(new SelectListItem() { Value = "KMGY", Text = airport1 });
+            selectListItems.Add(new SelectListItem() { Value = "KMGY", Text = airport1, Selected = true });
             selectListItems.Add(new SelectListItem() { Value = "KFFO", Text = airport2 });
             selectListItems.Add(new SelectListItem() { Value = "KDAY", Text = airport3 });
             ViewData[Util.Constants.ViewDataKeyForAirportSelect] = selectListItems; //put in view data so html dropdownlistfor helper can access

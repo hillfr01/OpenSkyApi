@@ -15,7 +15,7 @@
                 return "Not Found";
             }
 
-            return $"{airport.AirportName ?? ""}, {airport.Municipality}, {airport.IsoRegion} ({airport.AirportType ?? ""})";
+            return $"{airport.Ident} {airport.AirportName ?? ""}, {airport.Municipality}, {airport.IsoRegion} ({airport.AirportType ?? ""})";
         }
     }
 }

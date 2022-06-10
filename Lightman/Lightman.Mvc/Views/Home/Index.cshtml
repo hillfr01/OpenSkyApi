@@ -8,9 +8,9 @@
     @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "searchForm" }))
     {
         <div class="row">
-            <div class="form-group col-lg-4 col-sm-12" id="UserIdDropDownFormGroup">
+            <div class="form-group col-lg-4 col-sm-12" id="UserIdDropDownFormGroup" style="font-weight:bold">
                 @Html.LabelFor(m => m.AirportCode, htmlAttributes: new { })
-                @Html.DropDownListFor(m => m.AirportCode, ViewData[Util.Constants.ViewDataKeyForAirportSelect] as IEnumerable<SelectListItem>, new { @id = "AirportDropDown", @class = "form-control" })
+                @Html.DropDownListFor(m => m.AirportCode, ViewData[Util.Constants.ViewDataKeyForAirportSelect] as IEnumerable<SelectListItem>, new { @id = "AirportDropDown", @class = "form-select" })
             </div>
             <div class="form-group col-lg-1 col-sm-2">
                 @Html.LabelFor(m => m.StartDateTime, htmlAttributes: new { @title = "dd-mm-yyyy" })
@@ -121,7 +121,7 @@
                 processing: true, // for show progress bar, see on processing event above for processing dialog
                 //serverSide: false, // for process server side
                 //searchDelay: 1000,
-                filter: true, // this is for disable filter (search box)
+                filter: false, // this is for disable filter (search box)
                 ordering: true,
                 orderMulti: false, // for disable multiple column at once,
                 ajax: {
